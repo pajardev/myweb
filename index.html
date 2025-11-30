@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firebase Push Notif</title>
+</head>
+<body>
+
+<h2>Firebase Push Notification Test</h2>
+<button id="req">Minta Izin Notifikasi</button>
+<p id="tokenBox">Token: (belum dibuat)</p>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+  // ==== CONFIG DARI KAMU ====
+  const firebaseConfig = {
+    apiKey: "AIzaSyCayorpYQsuq1u4JqdpBOBx2XGazIR7k4Q",
+    authDomain: "webpenting.firebaseapp.com",
+    projectId: "webpenting",
+    storageBucket: "webpenting.firebasestorage.app",
+    messagingSenderId: "777238003480",
+    appId: "1:777238003480:web:c8418c2cdc0f54fb4a286d",
+    measurementId: "G-67M980QN2S"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const messaging = getMessaging(app);
+
+  // ====== REGISTER SW ======
+  navigator.serviceWorker.register("sw1.js")
+    .then((reg) => console.log("Service worker ready:", reg));
+
+  // ====== PERMISSION ======
+  document.getElementById("req").onclick = async () => {
+    const permission = await Notification.requestPermission();
+    if (permission !== "granted") {
+      alert("Izin notif ditolak!");
+      return;
+    }
+
+    const token = await getToken(messaging, {
+      vapidKey: "BIKIpXbHtrFNADcZWdnaHL4KVuCqQc7QxMonFHlvPOLrk5qOm33DML8lmNpXcvGdhlKdl8yI4HvrOktiu28eQuo"
+    });
+
+    document.getElementById("tokenBox").innerHTML = "TOKEN: " + token;
+    console.log("TOKEN:", token);
+  };
+
+  // ====== HANDLE NOTIF SAAT BROWSER TERBUKA ======
+  onMessage(messaging, (payload) => {
+    console.log("Notif foreground:", payload);
+    alert("Notif masuk: " + payload.notification.title);
+  });
+
+</script>
+
+</body>
+</html>
