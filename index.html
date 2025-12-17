@@ -1,61 +1,321 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Firebase Push Notif</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Website FajarDev</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  body{background:#fdfdfd;color:#000;overflow-x:hidden;}
+
+  /* NAV */
+  nav{
+    width:100%;padding:15px 25px;display:flex;justify-content:space-between;
+    align-items:center;position:fixed;top:0;left:0;z-index:999;
+    background:#fff;border-bottom:4px solid #000;
+    box-shadow:8px 8px 0 #000;
+  }
+  nav h1{font-size:1.6rem;font-weight:800;}
+  ul{list-style:none;display:flex;gap:25px;}
+  ul li a{text-decoration:none;color:#000;font-weight:700;}
+  .menu{display:none;flex-direction:column;gap:6px;}
+  .menu div{width:28px;height:5px;background:#000;}
+
+  @media(max-width:768px){ul{display:none;} .menu{display:flex;} }
+
+  /* HERO */
+  .hero{
+    height:100vh;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-align:center;padding:20px;
+  }
+  .hero h2{
+    font-size:3rem;font-weight:900;margin-bottom:15px;
+    padding:10px 20px;background:cyan;border:4px solid #000;
+    box-shadow:8px 8px 0 #000;
+  }
+  .hero p{max-width:550px;font-size:1.2rem;font-weight:600;}
+
+  /* SCROLL ANIMATIONS */
+  .scroll-anim{
+    opacity:0;transform:translateY(60px);
+    transition:0.7s ease-out;
+  }
+  .show{
+    opacity:1;transform:translateY(0);
+  }
+
+  /* SECTION */
+  section{padding:100px 20px;text-align:center;}
+  section h2{
+    font-size:2.5rem;font-weight:900;margin-bottom:20px;
+    background:#00ffea;border:4px solid #000;display:inline-block;
+    padding:10px 25px;box-shadow:6px 6px 0 #000;
+  }
+  .cards{
+    margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;padding:20px;
+  }
+  .card{
+    background:#fff;padding:30px;border:4px solid #000;border-radius:12px;
+    box-shadow:8px 8px 0 #000;font-weight:700;font-size:1.1rem;
+    transition:0.2s;
+  }
+  .card:hover{transform:translate(-5px,-5px);box-shadow:13px 13px 0 #000;}
+
+  /* FOOTER */
+  footer{padding:12px;text-align:center;border-top:4px solid #000;margin-top:50px;}
+
+/* BACKGROUND UTAMA YA */
+body,
+nav,
+.hero,
+#fitur,
+#pekerjaan,
+#kontak,
+footer {
+  background-color: #f5f0ff;
+}
+</style>
+<style>
+/* CARD STYLE UPGRADE */
+.card {
+  background: linear-gradient(145deg, #ffffff, #e0e0ff);
+  padding: 30px;
+  border: 4px solid #000;
+  border-radius: 16px;
+  box-shadow: 10px 10px 0 #000, -2px -2px 0 #aaa;
+  font-weight: 700;
+  font-size: 1.1rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+/* HOVER ANIMASI LEBIH KEREN */
+.card:hover {
+  transform: translate(-6px,-6px) rotate(-1deg) scale(1.05);
+  box-shadow: 14px 14px 0 #000, -2px -2px 0 #aaa;
+  background: linear-gradient(145deg, #f0f0ff, #d0d0ff);
+}
+
+/* OPTIONAL: CARD DI HERO (ZarzStack) */
+.hero .card {
+  font-size: 1.2rem;
+  background: linear-gradient(135deg, #ffffff, #f0f0ff);
+  box-shadow: 12px 12px 0 #000;
+}
+
+/* OPTIONAL: CARD DI SECTION LAIN */
+#fitur .card,
+#pekerjaan .card,
+#kontak .card {
+  background: linear-gradient(145deg, #ffffff, #e0e0ff);
+}
+
+/* CARD ZARZSTACK KEREN */
+.hero h2 {
+  position: relative;
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: 900;
+  margin-bottom: 15px;
+  padding: 20px 35px;
+  color: #000;
+  background: linear-gradient(135deg, #00ffff, #00c4ff);
+  border: 4px solid #000;
+  border-radius: 8px;
+  box-shadow: 10px 10px 0 #000;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  clip-path: polygon(0 0, 100% 10%, 100% 90%, 0% 100%);
+}
+
+/* Layered pseudo element di belakang */
+.hero h2::before {
+  content: "";
+  position: absolute;
+  top: -10px; left: -10px;
+  width: 100%; height: 100%;
+  background: rgba(0,255,255,0.2);
+  border: 4px solid #00cccc;
+  z-index: -1;
+  transform: rotate(-3deg);
+}
+
+/* Hover animasi keren */
+.hero h2:hover {
+  transform: translate(-8px, -8px) rotate(-2deg) scale(1.08);
+  box-shadow: 15px 15px 0 #000;
+  cursor: pointer;
+}
+
+/* CARD MODERN / KEREN UNTUK MY SKILL, PEKERJAAN, KONTAK */
+.cards .card,
+#kontak .scroll-anim {
+  position: relative;
+  background: linear-gradient(135deg, #ffffff, #d0d0ff);
+  border: 4px solid #000;
+  border-radius: 12px;
+  box-shadow: 8px 8px 0 #000, -3px -3px 0 #aaa;
+  padding: 25px 20px;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.4s ease;
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+/* Layer pseudo element untuk depth tambahan */
+.cards .card::before,
+#kontak .scroll-anim::before {
+  content: "";
+  position: absolute;
+  top: -8px; left: -8px;
+  width: 100%; height: 100%;
+  background: rgba(0,200,255,0.15);
+  border: 3px solid #00cccc;
+  z-index: -1;
+  transform: rotate(-2deg);
+  border-radius: 12px;
+}
+
+/* Hover efek keren */
+.cards .card:hover,
+#kontak .scroll-anim:hover {
+  transform: translate(-6px,-6px) rotate(-2deg) scale(1.05);
+  box-shadow: 12px 12px 0 #000, -3px -3px 0 #aaa;
+  background: linear-gradient(135deg, #f0f0ff, #c0c0ff);
+}
+</style>
 </head>
 <body>
+  <nav>
+    <i><h1>ZarzStack⚡</h1></i>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="#fitur">Fitur</a></li>
+      <li><a href="#kontak">Kontak</a></li>
+    </ul>
+    <div class="menu"><div></div><div></div><div></div></div>
+  </nav>
 
-<h2>Firebase Push Notification Test</h2>
-<button id="req">Minta Izin Notifikasi</button>
-<p id="tokenBox">Token: (belum dibuat)</p>
+  <div class="hero scroll-anim" id="home">
+    <i><h2>ZarzStack⚡</h2></i>
+    <p>Halo Selamat Datang Di Website Kami</p>
+  </div>
+  
+  <section id="pekerjaan">
+  <h2 class="scroll-anim">Pekerjaan</h2>
+  <div class="cards">
+    <div class="card scroll-anim">Trader💻📈</div>
+    <div class="card scroll-anim">Investor💰💸</div>
+  </div>
+</section>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+  <section id="myskill">
+    <h2 class="scroll-anim">My Skill</h2>
+    <div class="cards">
+      <div class="card scroll-anim">Full Stack Developer</div>
+      <div class="card scroll-anim">Game Developer</div>
+      <div class="card scroll-anim">Website Developer</div>
+      <div class="card scroll-anim">Designer</div>
+    </div>
+  </section>
 
-  // ==== CONFIG DARI KAMU ====
-  const firebaseConfig = {
-    apiKey: "AIzaSyCayorpYQsuq1u4JqdpBOBx2XGazIR7k4Q",
-    authDomain: "webpenting.firebaseapp.com",
-    projectId: "webpenting",
-    storageBucket: "webpenting.firebasestorage.app",
-    messagingSenderId: "777238003480",
-    appId: "1:777238003480:web:c8418c2cdc0f54fb4a286d",
-    measurementId: "G-67M980QN2S"
-  };
+<style>
+.social-card {
+  background: linear-gradient(135deg, #ffffff, #d0d0ff);
+  border: 4px solid #000;
+  border-radius: 12px;
+  box-shadow: 8px 8px 0 #000, -2px -2px 0 #aaa;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
 
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
+.social-card img {
+  width: 40px;
+  height: 40px;
+}
 
-  // ====== REGISTER SW ======
-  navigator.serviceWorker.register("sw1.js")
-    .then((reg) => console.log("Service worker ready:", reg));
+.social-card:hover {
+  transform: translate(-5px,-5px) scale(1.1);
+  box-shadow: 12px 12px 0 #000, -2px -2px 0 #aaa;
+  background: linear-gradient(135deg, #f0f0ff, #c0c0ff);
+  cursor: pointer;
+}
 
-  // ====== PERMISSION ======
-  document.getElementById("req").onclick = async () => {
-    const permission = await Notification.requestPermission();
-    if (permission !== "granted") {
-      alert("Izin notif ditolak!");
-      return;
-    }
+/* CARD UTAMA MY SKILL & PEKERJAAN – JAJAR GENJANG CYAN SEDANG */
+section h2.scroll-anim {
+  display: inline-block;
+  padding: 10px 40px; /* dikurangi dari 30px 70px */
+  font-size: 2.1rem; /* dikurangi dari 2.8rem */
+  font-weight: 900;
+  text-align: center;
+  color: #000;
+  background: linear-gradient(135deg, #00ffff, #f0f0ff);
+  border: 4px solid #000;
+  transform: skew(-20deg); /* Membuat jajar genjang */
+  box-shadow: 6px 6px 0 #000, -3px -3px 0 #00bfff, inset 0 0 12px rgba(0,255,255,0.2);
+  transition: all 0.4s ease;
+  position: relative;
+  cursor: default;
+  overflow: hidden;
+  border-radius: 12px;
+}
 
-    const token = await getToken(messaging, {
-      vapidKey: "oBRE8T_JJniXy2z1IwJwI4qr0t__IreI7DPBC3Hj9qM"
+/* Mengembalikan teks agar tetap lurus */
+section h2.scroll-anim > * {
+  display: inline-block;
+  transform: skew(20deg);
+}
+
+/* Hover efek futuristik */
+section h2.scroll-anim:hover {
+  transform: skew(-20deg) translate(-6px,-6px) scale(1.04);
+  box-shadow: 10px 10px 0 #000, -4px -4px 0 #00bfff, 0 0 18px #00ffff inset;
+}
+</style>
+
+  <section id="kontak">
+    <h2 class="scroll-anim">Kontak</h2>
+    <div class="scroll-anim social-icons" style="margin-top:20px; display:flex; justify-content:center; gap:25px;">
+  <a href="https://www.instagram.com/zarz_xcode" target="_blank" class="social-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" />
+  </a>
+  <a href="https://www.facebook.com" target="_blank" class="social-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+  </a>
+  <a href="https://www.twitter.com" target="_blank" class="social-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" />
+  </a>
+  <a href="https://wa.me/6283841036238" target="_blank" class="social-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp" />
+  </a>
+</div>
+  </section>
+
+ <i> <footer>© 2025 - FajarDev</footer></i>
+
+  <script>
+  const items = document.querySelectorAll('.scroll-anim');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('show');
+      } else {
+        // ini yang bikin animasi muncul lagi saat discroll ulang
+        e.target.classList.remove('show');
+      }
     });
+  }, { threshold: 0.2 });
 
-    document.getElementById("tokenBox").innerHTML = "TOKEN: " + token;
-    console.log("TOKEN:", token);
-  };
-
-  // ====== HANDLE NOTIF SAAT BROWSER TERBUKA ======
-  onMessage(messaging, (payload) => {
-    console.log("Notif foreground:", payload);
-    alert("Notif masuk: " + payload.notification.title);
-  });
-
+  items.forEach(i => obs.observe(i));
 </script>
-
 </body>
-</html>
+  </html>
+    
